@@ -426,6 +426,7 @@ const pledges = (app, liquidPledging) => {
       return reprocess(createDonation.bind(this, mutation, initialTransfer, true), 5000);
     }
 
+    logger.info('pledges.js createDonation() before Patch');
     const updatedDonation = await donationService.patch(donations[0]._id, mutation);
     logger.info('pledges.js createDonation() after PATCH updatedDonation', updatedDonation);
     return updatedDonation;
