@@ -343,14 +343,20 @@ const addActionTakerAddress = () => async context => {
   logger.info('donation pre-hook 3 addActionTakerAddress() ');
 
   const { txHash, actionTakerAddress, homeTxHash } = context.data;
+  logger.info('donation pre-hook 3/1 addActionTakerAddress() ');
 
   // Has already added or txHash/homeTxHash is not available
   if (!(txHash || homeTxHash) || actionTakerAddress) return;
+  logger.info('donation pre-hook 3/2 addActionTakerAddress() ');
 
   try {
+    logger.info('donation pre-hook 3/3 addActionTakerAddress() ');
     const { app } = context;
+    logger.info('donation pre-hook 3/4 addActionTakerAddress() ');
     const { from } = await getTransaction(app, homeTxHash || txHash, !!homeTxHash);
+    logger.info('donation pre-hook 3/5 addActionTakerAddress() ');
     context.data.actionTakerAddress = from;
+    logger.info('donation pre-hook 3/6 addActionTakerAddress() ');
   } catch (e) {
     logger.error(`Error on getting from of transaction: ${txHash}`, e);
   }
