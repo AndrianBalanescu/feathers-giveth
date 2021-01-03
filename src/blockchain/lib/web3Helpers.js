@@ -161,7 +161,7 @@ const txListeners = {};
  * @param {boolean} isHome get transaction of home network
  */
 const getTransaction = async (app, hash, isHome = false) => {
-  logger.info('donation pre-hook 3/4/1 addActionTakerAddress() ');
+  logger.info('donation pre-hook 3/4/1 addActionTakerAddress() ', { hash, isHome });
   const Transaction = app.get('transactionsModel');
   const query = { hash, isHome };
   const foundTransaction = await Transaction.findOne(query);
