@@ -173,6 +173,8 @@ const getTransaction = async (app, hash, isHome = false) => {
 
   // if we are already fetching the transaction, don't do it twice
   if (txListeners[hash]) {
+    logger.info('donation pre-hook 3/4/2 promise addActionTakerAddress() ');
+
     return new Promise(resolve => {
       // attach a listener which is executed when we get the block ts
       txListeners[hash].push(resolve);
