@@ -191,6 +191,7 @@ const getTransaction = async (app, hash, isHome = false) => {
   logger.info('donation pre-hook 3/4/3 addActionTakerAddress() ', { tx });
 
   if (!tx || !tx.blockNumber) {
+    delete txListeners[hash];
     throw new errors.NotFound(`Not tx found for ${hash}`);
   }
   const { from, blockNumber } = tx;
