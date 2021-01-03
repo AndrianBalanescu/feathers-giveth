@@ -173,11 +173,10 @@ const getTransaction = async (app, hash, isHome = false) => {
 
   // if we are already fetching the transaction, don't do it twice
   if (txListeners[hash]) {
-    logger.info(
-      'donation pre-hook 3/4/2 promise addActionTakerAddress() txListeners[hash] ',
-      txListeners[hash],
+    logger.info('donation pre-hook 3/4/2 promise addActionTakerAddress()', {
+      ' txListeners[hash] ': txListeners[hash],
       txListeners,
-    );
+    });
 
     return new Promise(resolve => {
       // attach a listener which is executed when we get the block ts
@@ -189,7 +188,7 @@ const getTransaction = async (app, hash, isHome = false) => {
 
   const web3 = isHome ? app.getHomeWeb3() : app.getWeb3();
   const tx = await web3.eth.getTransaction(hash);
-  logger.info('donation pre-hook 3/4/3 addActionTakerAddress() ');
+  logger.info('donation pre-hook 3/4/3 addActionTakerAddress() ', { tx });
 
   if (!tx) {
     throw new errors.NotFound(`Not tx found for ${hash}`);
