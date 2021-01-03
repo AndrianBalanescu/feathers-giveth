@@ -176,6 +176,7 @@ const getTransaction = async (app, hash, isHome = false) => {
     logger.info(
       'donation pre-hook 3/4/2 promise addActionTakerAddress() txListeners[hash] ',
       txListeners[hash],
+      txListeners,
     );
 
     return new Promise(resolve => {

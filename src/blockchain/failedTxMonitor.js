@@ -241,8 +241,7 @@ const failedTxMonitor = (app, eventWatcher) => {
       logger.error(
         'donation has status === `Pending` but home transaction was successful. Was the donation correctly bridged?',
         {
-          donation,
-          receipt,
+          donationId: donation._id,
         },
       );
     }
