@@ -106,6 +106,8 @@ const donationResolvers = {
 };
 
 const convertTokenToTokenAddress = () => context => {
+  logger.info('donation pre-hook 4 convertTokenToTokenAddress() ');
+
   const { data } = context;
   if (data.token) {
     data.tokenAddress = data.token.address;
@@ -219,6 +221,7 @@ const setEntityUpdated = () => async context => {
 };
 
 const restrict = () => async context => {
+  logger.info('donation pre-hook 1 restrict() ');
   // internal call are fine
   if (!context.params.provider) return context;
 
@@ -337,6 +340,8 @@ const updateMilestoneIfNotPledged = () => async context => {
 };
 
 const addActionTakerAddress = () => async context => {
+  logger.info('donation pre-hook 3 addActionTakerAddress() ');
+
   const { txHash, actionTakerAddress, homeTxHash } = context.data;
 
   // Has already added or txHash/homeTxHash is not available
