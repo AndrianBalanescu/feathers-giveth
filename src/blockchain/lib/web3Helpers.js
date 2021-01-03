@@ -190,7 +190,7 @@ const getTransaction = async (app, hash, isHome = false) => {
   const tx = await web3.eth.getTransaction(hash);
   logger.info('donation pre-hook 3/4/3 addActionTakerAddress() ', { tx });
 
-  if (!tx) {
+  if (!tx || !tx.blockNumber) {
     throw new errors.NotFound(`Not tx found for ${hash}`);
   }
   const { from, blockNumber } = tx;
