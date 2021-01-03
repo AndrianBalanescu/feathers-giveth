@@ -161,11 +161,14 @@ const txListeners = {};
  * @param {boolean} isHome get transaction of home network
  */
 const getTransaction = async (app, hash, isHome = false) => {
+  logger.info('donation pre-hook 3/4/1 addActionTakerAddress() ');
   const Transaction = app.get('transactionsModel');
   const query = { hash, isHome };
-  const result = await Transaction.find(query).exec();
-  if (result.length > 0) {
-    return result[0];
+  const foundTransaction = await Transaction.findOne(query);
+  logger.info('donation pre-hook 3/4/2 addActionTakerAddress() ');
+
+  if (foundTransaction) {
+    return foundTransaction;
   }
 
   // if we are already fetching the transaction, don't do it twice
@@ -180,12 +183,14 @@ const getTransaction = async (app, hash, isHome = false) => {
 
   const web3 = isHome ? app.getHomeWeb3() : app.getWeb3();
   const tx = await web3.eth.getTransaction(hash);
+  logger.info('donation pre-hook 3/4/3 addActionTakerAddress() ');
+
   if (!tx) {
     throw new errors.NotFound(`Not tx found for ${hash}`);
   }
   const { from, blockNumber } = tx;
   const { timestamp } = await web3.eth.getBlock(blockNumber);
-
+  logger.info('donation pre-hook 3/4/4 addActionTakerAddress() ');
   const transaction = new Transaction({
     hash,
     from,
@@ -194,7 +199,7 @@ const getTransaction = async (app, hash, isHome = false) => {
     isHome: !!isHome,
   });
   await transaction.save();
-
+  logger.info('donation pre-hook 3/4/5 addActionTakerAddress() ');
   // execute any listeners for the block
   txListeners[hash].forEach(cb => cb(transaction));
   delete txListeners[hash];
