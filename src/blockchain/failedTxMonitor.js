@@ -240,6 +240,10 @@ const failedTxMonitor = (app, eventWatcher) => {
     } else {
       logger.error(
         'donation has status === `Pending` but home transaction was successful. Was the donation correctly bridged?',
+        {
+          donation,
+          receipt,
+        },
       );
     }
   }

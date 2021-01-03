@@ -404,6 +404,11 @@ const pledges = (app, liquidPledging) => {
       paginate: false,
       query,
     });
+    logger.info('pledges.js createDonation()', {
+      donations,
+      mutation,
+      orStatements,
+    });
     if (donations.length === 0) {
       // if this is the second attempt, then create a donation object
       // otherwise, try and process the event later, giving time for
@@ -412,15 +417,21 @@ const pledges = (app, liquidPledging) => {
       // Other then that, the donation should always be created before the tx was mined.
 
       if (retry) {
+        logger.info('pledges.js createDonation() in retry scope', {
+          mutation,
+        });
         return donationService.create(mutation);
       }
       return reprocess(createDonation.bind(this, mutation, initialTransfer, true), 5000);
     }
 
-    return donationService.patch(donations[0]._id, mutation);
+    const updatedDonation = await donationService.patch(donations[0]._id, mutation);
+    logger.info('pledges.js createDonation() after PATCH updatedDonation', updatedDonation);
+    return updatedDonation;
   }
 
   async function newDonation(pledgeId, amount, ts, txHash) {
+    logger.info('newDonation ', { pledgeId, amount, ts, txHash });
     const pledge = await liquidPledging.getPledge(pledgeId);
     const giver = await getPledgeAdmin(pledge.owner);
     const token = _retreiveTokenFromPledge(app, pledge);
@@ -441,6 +452,7 @@ const pledges = (app, liquidPledging) => {
       txHash,
       homeTxHash: (await getHomeTxHash(txHash)) || 'unknown',
     };
+    logger.info('newDonation ', { mutation });
 
     // we pass true to retry b/c we never create a donation that needs to be updated
     // for the new donation Transfer event. The created donation that needs to be updated
@@ -570,6 +582,7 @@ const pledges = (app, liquidPledging) => {
 
   // fetches all necessary data to determine what happened for this Transfer event
   async function transfer(from, to, amount, ts, txHash) {
+    logger.info('transfer called', { from, to, amount, ts, txHash });
     try {
       const [fromPledge, toPledge, receipt] = await executeRequestsAsBatch(web3, [
         liquidPledging.$contract.methods.getPledge(from).call.request,
@@ -645,7 +658,7 @@ const pledges = (app, liquidPledging) => {
         logger.warn('Ignore repetitive transfer:', transferInfo);
       }
     } catch (err) {
-      logger.error(err);
+      logger.error('transfer error', err);
     }
   }
 
