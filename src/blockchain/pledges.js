@@ -375,6 +375,7 @@ const pledges = (app, liquidPledging) => {
       mined: false,
       tokenAddress: mutation.token.address,
     };
+
     orStatements.push([{ pledgeId: '0' }, { pledgeId: mutation.pledgeId }]);
     if (initialTransfer) {
       if (mutation.homeTxHash !== 'unknown') {
